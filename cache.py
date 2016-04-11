@@ -22,28 +22,31 @@ b_num = int(c_size) / int(b_size)
 if (asoc == "direct"):
     sets = b_num
     set_size = 1
-    mask = 1
     print
 elif (asoc == "2-way"):
     sets = b_num / 2
     set_size = 2
-    mask = 3
     print
 else:
     sets = b_num / 4
     set_size = 4
-    mask = 7
     print
 
 print asoc, c_size, b_size
 
 offset = int(math.log(float(b_size),2))
 index = int(math.log(float(sets),2))
-cache = [[0 for x in range(set_size)] for x in range(b_num)]
+#print " index", index
+cache = [[0 for x in range(set_size)] for x in range(b_num/set_size)]
 print cache
 hit  = 0
 miss = 0
 
+mask = 1
+for i in range(0, index-1):
+    mask = 1 + mask*2
+
+#print "mask is",mask
 for line in open('aligned.trace'):
 #    print line
     data = line.split()
@@ -53,7 +56,7 @@ for line in open('aligned.trace'):
     for i in range (0, offset): #delete the offset form the read
         tag = (tag / 2)
 #    print "new number", bin(tag)
-    read_idex = tag & 3     #extract the index
+    read_index = tag & mask     #extract the index
 #    print "read index", read_idex
     for i in range (0, index): #delete the index from the read
         tag = (tag / 2)
@@ -68,10 +71,10 @@ for line in open('aligned.trace'):
 
     for way in range (0, set_size):
 #        print "way is ",way
-        if (cache[read_idex][way] == tag):
+        if (cache[read_index][way] == tag):
             hit = hit + 1
         elif (way == set_size-1): #we read all the set and can't fint the tag
             miss = miss + 1
-            cache[read_idex][randint(0,set_size-1)] = tag #random associativity
+            cache[read_index][randint(0,set_size-1)] = tag #random associativity
 
 print "misses: ",miss, "hits: ", hit
