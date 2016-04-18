@@ -10,9 +10,7 @@ if (len(sys.argv) < 4):
 asoc = sys.argv[1]
 c_size = sys.argv[2]
 b_size = sys.argv[3]
-if (asoc == "direct" or "2-way" or "4-way"):
-    print
-else:
+if (asoc not in ("direct", "2-way", "4-way")):
     print "Invalid associativity name, valid names: direct, 2-way, 4-way"
     sys.exit()
 
@@ -22,15 +20,12 @@ b_num = int(c_size) / int(b_size)
 if (asoc == "direct"):
     sets = b_num
     set_size = 1
-    print
 elif (asoc == "2-way"):
     sets = b_num / 2
     set_size = 2
-    print
 else:
     sets = b_num / 4
     set_size = 4
-    print
 
 print asoc, c_size, b_size
 
@@ -41,6 +36,7 @@ print cache
 hit  = 0
 miss = 0
 mask = 0
+#This mas will be used to extract the index
 for i in range(index):
     mask = 1 + mask*2
 
