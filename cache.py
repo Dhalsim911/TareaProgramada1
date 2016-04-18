@@ -36,41 +36,28 @@ print asoc, c_size, b_size
 
 offset = int(math.log(float(b_size),2))
 index = int(math.log(float(sets),2))
-#print " index", index
 cache = [[0 for x in range(set_size)] for x in range(b_num/set_size)]
 print cache
 hit  = 0
 miss = 0
-
-mask = 1
-for i in range(0, index-1):
+mask = 0
+for i in range(index):
     mask = 1 + mask*2
 
-#print "mask is",mask
 for line in open('aligned.trace'):
-#    print line
     data = line.split()
-#    print "     numer", bin(int(data[0], 16))
-#    print "offset", offset
     tag = int(data[0], 16) #still not the tag
-    for i in range (0, offset): #delete the offset form the read
+    for i in range (offset): #delete the offset from the read
         tag = (tag / 2)
-#    print "new number", bin(tag)
     read_index = tag & mask     #extract the index
-#    print "read index", read_idex
-    for i in range (0, index): #delete the index from the read
-        tag = (tag / 2)
-    #now we have only the tag in $tag
-#    print "new number", bin(tag)
-#    print "index is",index
-#    print "sets is", sets
+    for i in range (index): #delete the index from the read
+        tag = (tag / 2) #now we have only the tag in $tag
 
 #no-write allocate and write through, if we have a hit we do nothing to the cache,
-#(that's because we are't working with data)
+#(that's because we aren't working with data)
 #if we have a miss we copy the memory direction in the cache
 
-    for way in range (0, set_size):
-#        print "way is ",way
+    for way in range (set_size):
         if (cache[read_index][way] == tag):
             hit = hit + 1
         elif (way == set_size-1): #we read all the set and can't fint the tag
