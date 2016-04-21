@@ -17,3 +17,4 @@ for arg1 in ( "direct", "2-way", "4-way"):
             #     file.write(i)
             file.write(asoc + " " + str(c_size) + " " + str(b_size) + " " + str(miss) + " " + str(hits))
             file.write("\n")
+file.close()
