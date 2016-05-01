@@ -9,7 +9,18 @@ def cache (asoc, c_size, b_size):
         print "Invalid associativity name, valid names: direct, 2-way, 4-way"
         sys.exit()
 
-    b_num = int(c_size) / int(b_size)
+    c_size = int(c_size)
+    b_size = int(b_size)
+
+    if((c_size & (c_size -1)) != 0):
+	    print "Invalid cache size, use a base 2 number"
+	    sys.exit()
+
+    if((b_size & (b_size -1)) != 0):
+	    print "Invalid block size, use a base 2 number"
+	    sys.exit()
+
+    b_num = c_size / b_size
 
     #select the associativity
     if (asoc == "direct"):
